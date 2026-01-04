@@ -1,20 +1,24 @@
 import express from "express";
 import { requestLogger } from "./middlewares/requestLogger";
-import { globalErrorHandler } from "./core/error-handler";
-import { registerSwagger } from "./core/swagger";
 import healthRouter from "./modules/health/health.routes";
-import catalogRouter from "./modules/catalog/catalog.routes";
+import { authRouter } from "./modules/auth/auth.routes";
+import { baseUrl } from "./app.constants";
+import { userRouter } from "./modules/user/user.routes";
 
 export function createApp() {
   const app = express();
-
   app.use(express.json());
-  app.use(requestLogger);
-  app.use("/catalog", catalogRouter);
-  app.use(healthRouter);
-  app.use(globalErrorHandler);
 
-  registerSwagger(app);
+  app.use(requestLogger);
+
+  // app starter seeds
+  // seedIndex();
+
+  // app routes
+  app.use(`${baseUrl}/auth`, authRouter);
+  app.use(`${baseUrl}/users`, userRouter);
+
+  app.use(healthRouter);
 
   return app;
 }

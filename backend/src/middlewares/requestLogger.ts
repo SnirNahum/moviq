@@ -1,5 +1,7 @@
 import pinoHttp from "pino-http";
 import { logger } from "../config/logger.config.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const requestLogger = pinoHttp({
   logger,

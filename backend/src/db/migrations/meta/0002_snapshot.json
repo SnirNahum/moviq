@@ -1,6 +1,6 @@
 {
-  "id": "56c582af-60b2-4e8d-9722-421bf66384ee",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "5764e763-9e7d-4561-aa89-5681a315e981",
+  "prevId": "4cb0e9cc-4395-48d1-9418-2cb0dbd5cdbf",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -39,79 +39,12 @@
           "primaryKey": false,
           "notNull": true
         },
-        "permissions_id": {
-          "name": "permissions_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
+        "status": {
+          "name": "status",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "users_permissions_id_permissions_id_fk": {
-          "name": "users_permissions_id_permissions_id_fk",
-          "tableFrom": "users",
-          "tableTo": "permissions",
-          "columnsFrom": [
-            "permissions_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "users_username_unique": {
-          "name": "users_username_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "username"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.permissions": {
-      "name": "permissions",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "permission_level": {
-          "name": "permission_level",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": true
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -132,18 +65,11 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "permissions_name_unique": {
-          "name": "permissions_name_unique",
+        "users_username_unique": {
+          "name": "users_username_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "name"
-          ]
-        },
-        "permissions_permission_level_unique": {
-          "name": "permissions_permission_level_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "permission_level"
+            "username"
           ]
         }
       },
@@ -259,6 +185,67 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.permissions": {
+      "name": "permissions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "permission_level": {
+          "name": "permission_level",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "permissions_name_unique": {
+          "name": "permissions_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        },
+        "permissions_permission_level_unique": {
+          "name": "permissions_permission_level_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "permission_level"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

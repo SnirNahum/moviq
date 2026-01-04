@@ -1,14 +1,21 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { logger } from "../config/logger.config.js";
-import { users } from "../db/schema/users";
+import { sql } from "drizzle-orm";
+import pkg from "pg";
+import * as schema from "./schema/index.schema.js";
 
-export async function dbPing(): Promise<void> {
-  const db = drizzle(process.env.DATABASE_URL!);
-  let usersTable: any = [];
+const { Pool } = pkg;
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+export const db = drizzle(pool, { schema });
+
+export async function dbPingOnStartup() {
   try {
-    usersTable = await db.select().from(users);
-    console.log("---------------- ", usersTable);
-  } finally {
-    logger.info("Database connection successful");
+    await db.execute(sql`SELECT 1`);
+    console.log("Database connection successful.");
+  } catch (error) {
+    console.error("Database ping failed:", error);
+    throw error;
   }
 }

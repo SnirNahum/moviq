@@ -3,6 +3,7 @@ export const dbConfig = {
   url: process.env.DATABASE_URL,
 };
 
+
 export const jwtConfig = {
   jwt_token: process.env.JWT_SECRET,
   expiresInMinutes: process.env.JWT_EXPIRES_MINUTES,
