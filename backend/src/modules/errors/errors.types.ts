@@ -5,8 +5,3 @@ export interface PgErrorDetails {
   table?: string;
   column?: string;
 }
-
-export type PgDriverError = {
-  code?: string;
-  detail?: string;
-};

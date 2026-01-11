@@ -1,0 +1,385 @@
+openapi: 3.0.3
+info:
+  title: Moviq
+  description: API for managing users
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Local development server
+
+tags:
+  - name: Users
+    description: User management operations
+
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get all users
+      description: Retrieve a list of all users in the system
+      operationId: getUsers
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+              examples:
+                usersList:
+                  value:
+                    users:
+                      - id: "123e4567-e89b-12d3-a456-426614174000"
+                        firstName: John
+                        lastName: Doe
+                        username: johndoe
+                        createdAt: "2024-01-15T10:30:00Z"
+                        updatedAt: "2024-01-15T10:30:00Z"
+                      - id: "223e4567-e89b-12d3-a456-426614174001"
+                        firstName: Jane
+                        lastName: Smith
+                        username: janesmith
+                        createdAt: "2024-01-16T14:20:00Z"
+                        updatedAt: "2024-01-16T14:20:00Z"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Users
+      summary: Create a new user
+      description: Add a new user to the system
+      operationId: createNewUser
+      requestBody:
+        required: true
+        description: User object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserEntity'
+            examples:
+              newUser:
+                value:
+                  firstName: John
+                  lastName: Doe
+                  username: johndoe
+                  password: securePassword123
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdUser:
+                    $ref: '#/components/schemas/UserId'
+              examples:
+                created:
+                  value:
+                    createdUser:
+                      id: "123e4567-e89b-12d3-a456-426614174000"
+        '400':
+          description: Bad request - Could not create user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Could not create user"
+                  err:
+                    type: object
+              examples:
+                validationError:
+                  value:
+                    message: "Could not create user"
+                    err:
+                      cause: "Validation failed"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: Get user by ID
+      description: Retrieve a specific user by their unique ID
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: string
+            example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+              examples:
+                userFound:
+                  value:
+                    user:
+                      id: "123e4567-e89b-12d3-a456-426614174000"
+                      firstName: John
+                      lastName: Doe
+                      username: johndoe
+                      createdAt: "2024-01-15T10:30:00Z"
+                      updatedAt: "2024-01-15T10:30:00Z"
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                notFound:
+                  value:
+                    message: "User with ID 123e4567-e89b-12d3-a456-426614174000 not found"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/{id}:
+    put:
+      tags:
+        - Users
+      summary: Update user
+      description: Update an existing user's information
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: string
+            example: "123e4567-e89b-12d3-a456-426614174000"
+      requestBody:
+        required: true
+        description: Updated user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserEntity'
+            examples:
+              updateUser:
+                value:
+                  firstName: John
+                  lastName: Updated
+                  username: johnupdated
+                  password: newPassword123
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updatedUser:
+                    $ref: '#/components/schemas/UserId'
+              examples:
+                updated:
+                  value:
+                    updatedUser:
+                      id: "123e4567-e89b-12d3-a456-426614174000"
+        '400':
+          description: Bad request - Could not update user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                updateError:
+                  value:
+                    message: "Could not update user with ID: 123e4567-e89b-12d3-a456-426614174000"
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                notFound:
+                  value:
+                    message: "User with ID 123e4567-e89b-12d3-a456-426614174000 not found"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Users
+      summary: Delete user
+      description: Remove a user from the system
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: string
+            example: ""
+      responses:
+        '204':
+          description: User deleted successfully - No content
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                notFound:
+                  value:
+                    message: "User with ID 123e4567-e89b-12d3-a456-426614174000 not found"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    User:
+      type: object
+      description: Complete user object with all fields
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the user
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        firstName:
+          type: string
+          description: First name of the user
+          example: John
+        lastName:
+          type: string
+          description: Last name of the user
+          example: Doe
+        username:
+          type: string
+          description: Unique username
+          example: johndoe
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the user was created
+          example: "2024-01-15T10:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the user was last updated
+          example: "2024-01-15T10:30:00Z"
+      required:
+        - id
+        - firstName
+        - lastName
+        - username
+
+    UserEntity:
+      type: object
+      description: User data for creating or updating a user
+      properties:
+        firstName:
+          type: string
+          description: First name of the user
+          example: John
+          minLength: 1
+          maxLength: 100
+        lastName:
+          type: string
+          description: Last name of the user
+          example: Doe
+          minLength: 1
+          maxLength: 100
+        username:
+          type: string
+          description: Unique username
+          example: johndoe
+          minLength: 3
+          maxLength: 50
+        password:
+          type: string
+          description: User password
+          format: password
+          example: securePassword123
+          minLength: 8
+      required:
+        - firstName
+        - lastName
+        - username
+        - password
+
+    UserId:
+      type: object
+      description: Object containing only the user ID
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the user
+          example: "123e4567-e89b-12d3-a456-426614174000"
+      required:
+        - id
+
+    Error:
+      type: object
+      description: Standard error response
+      properties:
+        message:
+          type: string
+          description: Error message
+          example: "Error fetching all users"
+        error:
+          type: object
+          description: Error details
+      required:
+        - message

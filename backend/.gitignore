@@ -30,7 +30,8 @@ lerna-debug.log*
 *.sqlite3
 *.db
 db_schemas.drawio
-dumb_queries.sql
+sql-queris.sql
+
 
 # Docker
 .docker/

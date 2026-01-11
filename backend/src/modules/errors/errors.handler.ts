@@ -1,23 +1,22 @@
-import type { Response } from "express";
-import { mapPgError } from "./errors.utils";
+import { Response } from "express";
+import { logger } from "../../config/logger.config";
 
-export default function serverError(
+export default function handleServerError(
   res: Response,
   message: string,
   err: unknown
 ): void {
-  const mapped = mapPgError(err);
-
-  if (mapped) {
-    res.status(400).json({
-      message: mapped.message,
-      code: mapped.code,
-    });
-    return;
-  }
-
+  logger.error(message);
   res.status(500).json({
-    message,
+    message: message,
     error: err instanceof Error ? err.message : "Unknown error",
   });
+}
+
+export class NotFoundError extends Error {
+  statusCode = 404;
+
+  constructor(message = "Resource not found") {
+    super(message);
+  }
 }

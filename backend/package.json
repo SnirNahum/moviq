@@ -4,9 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "bootstrap": "npm install && npm run db:up && npm run db:migrate",
+    "bootstrap": "npm install && npm run db:up && npm run db:wait && npm run db:migrate",
     "dev": "cross-env NODE_ENV=development tsx watch src/server.ts | pino-pretty",
-    "build": "tsc"
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v",
+    "db:wait": "node scripts/wait-for-postgres.ts",
+    "db:migrate": "drizzle-kit migrate"
   },
   "keywords": [],
   "author": "",
