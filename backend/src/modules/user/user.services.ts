@@ -45,7 +45,6 @@ class UserService {
     userId: string,
     updateUserBody: UserEntity
   ): Promise<UserId> {
-    
     const normalizedBody: UserEntity = normalizeUserBody(updateUserBody);
     const [updatedUser] = await db
       .update(users)

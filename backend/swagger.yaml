@@ -57,7 +57,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  /users/create:
     post:
       tags:
         - Users
@@ -76,8 +76,8 @@ paths:
                 value:
                   firstName: John
                   lastName: Doe
-                  username: johndoe
-                  password: securePassword123
+                  username: johndoe@gmail.com
+                  passwordHash: securePassword123
       responses:
         '201':
           description: User created successfully
@@ -150,7 +150,7 @@ paths:
                       id: "123e4567-e89b-12d3-a456-426614174000"
                       firstName: John
                       lastName: Doe
-                      username: johndoe
+                      username: johndoe@gmail.com
                       createdAt: "2024-01-15T10:30:00Z"
                       updatedAt: "2024-01-15T10:30:00Z"
         '404':
@@ -200,8 +200,8 @@ paths:
                 value:
                   firstName: John
                   lastName: Updated
-                  username: johnupdated
-                  password: newPassword123
+                  username: johnupdated@gmail.com
+                  passwordHash: newPassword123
       responses:
         '200':
           description: User updated successfully
@@ -347,7 +347,7 @@ components:
           example: johndoe
           minLength: 3
           maxLength: 50
-        password:
+        passwordHash:
           type: string
           description: User password
           format: password
