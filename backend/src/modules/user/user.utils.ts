@@ -1,4 +1,6 @@
-import { User, UserEntity } from "./user.types";
+import bcrypt from "bcrypt";
+import { SALT_ROUNDS } from "./user.constants";
+import { User } from "./user.types";
 
 export function prepareUserToBeUpdatedBody(
   currentUserBody: any,
@@ -12,11 +14,15 @@ export function prepareUserToBeUpdatedBody(
   };
 }
 
-export function normalizeUserBody(body: UserEntity): UserEntity {
+export function normalizeUpdateUserBody(user: User): User {
   return {
-    ...body,
-    firstName: body.firstName?.trim(),
-    lastName: body.lastName?.trim(),
-    username: body.username?.trim().toLowerCase(),
+    ...user,
+    firstName: user.firstName?.trim(),
+    lastName: user.lastName?.trim(),
+    username: user.username?.trim().toLowerCase(),
   };
+}
+
+export async function passwordHashGenerator(plainPassword: string) {
+  return await bcrypt.hash(plainPassword, SALT_ROUNDS);
 }

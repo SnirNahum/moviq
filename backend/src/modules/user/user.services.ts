@@ -1,9 +1,8 @@
 import { db } from "../../db/db.index";
 import { users } from "../../db/schema/index.schema";
-import { UserEntity, User, UserId } from "./user.types";
-import { USERS_STATUS } from "./user.constants";
+import { CreateUserDbValues, User, UserId } from "./user.types";
+import { USER_ERROR_MESSAGE, USERS_STATUS } from "./user.constants";
 import { and, eq } from "drizzle-orm";
-import { normalizeUserBody } from "./user.utils";
 
 class UserService {
   async getUsers(): Promise<User[]> {
@@ -31,24 +30,23 @@ class UserService {
 
     return user;
   }
-  async createNewUser(newUser: UserEntity): Promise<UserId> {
-    const normalizedBody: UserEntity = normalizeUserBody(newUser);
 
+  async createNewUser(userBody: CreateUserDbValues): Promise<UserId> {
     const [createdUser] = await db
       .insert(users)
-      .values(normalizedBody)
+      .values(userBody)
       .returning({ id: users.id });
     return createdUser;
   }
 
-  async updateUserById(
-    userId: string,
-    updateUserBody: UserEntity
-  ): Promise<UserId> {
-    const normalizedBody: UserEntity = normalizeUserBody(updateUserBody);
+  async updateUserById(userId: string, updateUserBody: User): Promise<UserId> {
     const [updatedUser] = await db
       .update(users)
-      .set(normalizedBody)
+      .set({
+        firstName: updateUserBody.firstName,
+        lastName: updateUserBody.lastName,
+        username: updateUserBody.username,
+      })
       .where(eq(users.id, userId))
       .returning({ id: users.id });
 

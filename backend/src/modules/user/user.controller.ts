@@ -1,87 +1,80 @@
 import { Request, Response } from "express";
 import { logger } from "../../config/logger.config";
 import { userService } from "./user.services";
-import { UserEntity, User, UserId } from "./user.types";
-import serverError from "../errors/errors.handler";
+import handleServerError from "../errors/errors.handler";
+import { USER_ERROR_MESSAGE } from "./user.constants";
+import { User, UserId } from "./user.types";
+import { UserSchema } from "./user.validation";
 
 class UserController {
   async getUsers(req: Request, res: Response): Promise<void> {
     try {
-      const usersList = await userService.getUsers();
-      res.status(200).json({ users: usersList });
-    } catch (err) {
-      logger.error({ err }, "Error fetching all users");
-      serverError(res, `Error fetching all users`, err);
+      const users: User[] = await userService.getUsers();
+      res.status(200).json({ users });
+    } catch (err: any) {
+      handleServerError(
+        res,
+        err?.message ?? USER_ERROR_MESSAGE.SERVER_ERROR,
+        err
+      );
     }
   }
 
   async getUserById(req: Request, res: Response): Promise<void> {
-    const userId: string = req.params.userId;
+    const userId = req.params.userId as string;
 
     try {
       const user: User = await userService.getUserById(userId);
-      if (!user) {
-        logger.info(`User with ID ${userId} not found`);
-        res.status(404).json({ message: `User with ID ${userId} not found` });
-        return;
-      }
-      logger.info(`Fetched user with ID ${userId}`);
-      res.status(200).json({ user: user });
-    } catch (err) {
-      logger.error({ err }, `Error fetching user with ID ${userId}`);
-      serverError(res, `Error fetching user with ID ${userId}`, err);
+
+      res.status(200).json(user);
+    } catch (err: any) {
+      handleServerError(
+        res,
+        err?.message ?? USER_ERROR_MESSAGE.SERVER_ERROR,
+        err
+      );
     }
   }
+
   async createNewUser(req: Request, res: Response): Promise<void> {
     try {
-      const newUserBody: UserEntity = req.body;
-      const createdUser: UserId = await userService.createNewUser(
-        newUserBody
-      );
-      logger.info(`User created successfully with ID: ${createdUser.id}`);
-      res.status(201).json({ createdUser });
+      const user: UserId = await userService.createNewUser(req.body);
+      logger.info({ message: `User created successfully` });
+      res.status(200).json({ user });
     } catch (err: any) {
-      if (err.cause) {
-        logger.info(`Could not create user`, err);
-        res.status(400).json({ message: `Could not create user`, err });
-        return;
-      }
-      logger.error({ err }, "Could not create user");
-      serverError(res, "Could not create user", err);
+      handleServerError(
+        res,
+        err?.message ?? USER_ERROR_MESSAGE.SERVER_ERROR,
+        err
+      );
     }
   }
   async updateUser(req: Request, res: Response): Promise<void> {
-    const userId: string = req.params.id;
-    const updateUserBody: UserEntity = req.body;
-    try {      
-      const updatedUser: UserId = await userService.updateUserById(
-        userId,
-        updateUserBody
-      );
+    const userId = req.params.id;
 
-      if (!updatedUser) {
-        logger.info(`User with ID ${userId} not found`);
-        res.status(404).json({ message: `User with ID ${userId} not found` });
-        return;
-      }
-      logger.info(`User with ID ${userId} updated successfully`);
-      res.status(200).json({ updatedUser });
-    } catch (err: any) {
-      if (err.cause) {
-        logger.info(`Could not update user`, err);
-        res
-          .status(400)
-          .json({ message: `Could not update user with ID: ${userId}` });
-        return;
-      }
-      logger.error(`Could not update user`, err);
-      serverError(res, `Error updating user with ID ${userId}`, err);
+    const parsed = req.body;
+    console.log(userId);
+    console.log(parsed);
+
+    if (!parsed) {
+      res.status(400).json({ message: "Invalid request body" });
+      return;
     }
+
+    const updateBody = parsed;
+
+    const updated = await userService.updateUserById(userId, updateBody);
+    if (!updated) {
+      res.status(404).json({ message: `User with ID ${userId} not found` });
+      return;
+    }
+
+    res.status(200).json({ updatedUser: updated });
   }
   async deleteUser(req: Request, res: Response): Promise<void> {
-    const userId: string = req.params.id;
+    const userId: string = req.params.id as string;
     try {
-      const deletedUser: UserId[] = await userService.deleteUserById(userId);
+      const deletedUser = await userService.deleteUserById(userId);
       if (!deletedUser) {
         logger.info(`User with ID ${userId} not found`);
         res.status(404).json({ message: `User with ID ${userId} not found` });
@@ -92,7 +85,7 @@ class UserController {
       return;
     } catch (err) {
       logger.error({ err }, `Error updating user with ID: ${userId}`);
-      serverError(res, `Could not delete user with ID: ${userId}`, err);
+      handleServerError(res, `Could not delete user with ID: ${userId}`, err);
     }
   }
 }

@@ -4,6 +4,7 @@ import healthRouter from "./modules/health/health.routes";
 import { authRouter } from "./modules/auth/auth.routes";
 import { baseUrl } from "./app.constants";
 import { userRouter } from "./modules/user/user.routes";
+import { errorHandler } from "./middlewares/errorHandler";
 
 export function createApp() {
   const app = express();
@@ -19,6 +20,7 @@ export function createApp() {
   app.use(`${baseUrl}/users`, userRouter);
 
   app.use(healthRouter);
+  // app.use(errorHandler);
 
   return app;
 }
