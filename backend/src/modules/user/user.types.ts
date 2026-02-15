@@ -1,5 +1,3 @@
-import z from "zod";
-
 export interface User {
   id?: string;
   firstName: string;
@@ -15,7 +13,7 @@ export interface UserDBRow extends User {
 }
 
 export type CreateUserDbValues = User & {
-  passwordHash: string; 
+  passwordHash: string;
 };
 
 export type UserId = Pick<User, "id">;

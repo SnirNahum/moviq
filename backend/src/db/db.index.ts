@@ -1,5 +1,4 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { sql } from "drizzle-orm";
 import pkg from "pg";
 import * as schema from "./schema/index.schema.js";
 
@@ -10,12 +9,3 @@ const pool = new Pool({
 
 export const db = drizzle(pool, { schema });
 
-export async function dbPingOnStartup() {
-  try {
-    await db.execute(sql`SELECT 1`);
-    console.log("Database connection successful.");
-  } catch (error) {
-    console.error("Database ping failed:", error);
-    throw error;
-  }
-}

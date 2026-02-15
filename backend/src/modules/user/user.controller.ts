@@ -4,7 +4,6 @@ import { userService } from "./user.services";
 import handleServerError from "../errors/errors.handler";
 import { USER_ERROR_MESSAGE } from "./user.constants";
 import { User, UserId } from "./user.types";
-import { UserSchema } from "./user.validation";
 
 class UserController {
   async getUsers(req: Request, res: Response): Promise<void> {
@@ -15,7 +14,7 @@ class UserController {
       handleServerError(
         res,
         err?.message ?? USER_ERROR_MESSAGE.SERVER_ERROR,
-        err
+        err,
       );
     }
   }
@@ -31,7 +30,7 @@ class UserController {
       handleServerError(
         res,
         err?.message ?? USER_ERROR_MESSAGE.SERVER_ERROR,
-        err
+        err,
       );
     }
   }
@@ -45,23 +44,19 @@ class UserController {
       handleServerError(
         res,
         err?.message ?? USER_ERROR_MESSAGE.SERVER_ERROR,
-        err
+        err,
       );
     }
   }
   async updateUser(req: Request, res: Response): Promise<void> {
-    const userId = req.params.id;
+    const userId = req.params.id as string;
 
-    const parsed = req.body;
-    console.log(userId);
-    console.log(parsed);
+    const updateBody = req.body;
 
-    if (!parsed) {
+    if (!updateBody) {
       res.status(400).json({ message: "Invalid request body" });
       return;
     }
-
-    const updateBody = parsed;
 
     const updated = await userService.updateUserById(userId, updateBody);
     if (!updated) {

@@ -21,6 +21,5 @@ export function createApp() {
 
   app.use(healthRouter);
   // app.use(errorHandler);
-
   return app;
 }

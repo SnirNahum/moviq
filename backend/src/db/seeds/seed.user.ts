@@ -6,11 +6,11 @@ export async function seedUsers() {
     console.log("🌱 Seeding users...");
 
     // await insertAdminUser();
-    await insertregularUser();
+    // await insertregularUser();
 
-    console.log("🎉 Users seeding completed!");
+    console.log("Users seeding completed!");
   } catch (error) {
-    console.error("❌ Seeding failed:", error);
+    console.error("Seeding failed:", error);
     throw error;
   }
 }
@@ -30,16 +30,15 @@ export async function seedUsers() {
 //     .returning();
 // }
 
-async function insertregularUser() {
-  await db.insert(users)
-    .values({
-      firstName: "regular",
-      lastName: "user",
-      username: "regular@gmail.com",
-      passwordHash: "regular123",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    })
-    .returning();
-    
-}
+// async function insertregularUser() {
+//   await db.insert(users)
+//     .values({
+//       firstName: "regular",
+//       lastName: "user",
+//       username: "regular@gmail.com",
+//       passwordHash: "regular123",
+//       createdAt: new Date(),
+//       updatedAt: new Date(),
+//     })
+//     .returning();
+// }
