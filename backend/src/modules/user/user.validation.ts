@@ -15,12 +15,11 @@ const baseSchema = z.object({
 
 export const UserSchema = baseSchema.transform(async (data) => {
   const hash = await passwordHashGenerator(data.password);
-  console.log(data);
   
   return {
     firstName: data.firstName,
     lastName: data.lastName,
     username: data.username,
-    passwordHash: hash,
+    password: hash,
   };
 });

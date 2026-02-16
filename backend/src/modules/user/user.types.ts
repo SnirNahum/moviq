@@ -6,14 +6,14 @@ export interface User {
 }
 
 export interface UserDBRow extends User {
-  passwordHash: string;
+  password: string;
   status: number;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export type CreateUserDbValues = User & {
-  passwordHash: string;
+  password: string;
 };
 
 export type UserId = Pick<User, "id">;

@@ -5,7 +5,6 @@ import { dbConfig } from "./config/env.config.js";
 import { logger } from "./config/logger.config.js";
 import { runMigrationsIfNeeded } from "./db/migrate.js";
 import { setupSwagger } from "./docs/swagger";
-import { mongoDBConnect } from "./db/mongodb/mongodb.connect.js";
 import { seedShows } from "./scripts/seedShows/seed-shows.js";
 
 const app = createApp();

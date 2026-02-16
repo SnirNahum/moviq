@@ -57,7 +57,7 @@ class UserController {
       res.status(400).json({ message: "Invalid request body" });
       return;
     }
-
+    
     const updated = await userService.updateUserById(userId, updateBody);
     if (!updated) {
       res.status(404).json({ message: `User with ID ${userId} not found` });

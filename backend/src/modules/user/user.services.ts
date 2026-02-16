@@ -1,6 +1,6 @@
 import { db } from "../../db/db.index";
 import { users } from "../../db/schema/index.schema";
-import { CreateUserDbValues, User, UserId } from "./user.types";
+import { CreateUserDbValues, User, UserDBRow, UserId } from "./user.types";
 import { USER_ERROR_MESSAGE, USERS_STATUS } from "./user.constants";
 import { and, eq } from "drizzle-orm";
 
@@ -39,18 +39,20 @@ class UserService {
     return createdUser;
   }
 
-  async updateUserById(userId: string, updateUserBody: User): Promise<UserId> {
+  async updateUserById(userId: string, updateUserBody: UserDBRow): Promise<UserId> {
     const [updatedUser] = await db
       .update(users)
       .set({
         firstName: updateUserBody.firstName,
         lastName: updateUserBody.lastName,
         username: updateUserBody.username,
+        status: updateUserBody?.status,
       })
       .where(eq(users.id, userId))
       .returning({ id: users.id });
 
     return updatedUser;
+    ;
   }
   async deleteUserById(userId: string): Promise<UserId[]> {
     return await db

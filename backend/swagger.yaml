@@ -77,7 +77,7 @@ paths:
                   firstName: John
                   lastName: Doe
                   username: johndoe@gmail.com
-                  passwordHash: securePassword123
+                  password: securePassword123
       responses:
         '201':
           description: User created successfully
@@ -201,7 +201,7 @@ paths:
                   firstName: John
                   lastName: Updated
                   username: johnupdated@gmail.com
-                  passwordHash: newPassword123
+                  password: newPassword123
       responses:
         '200':
           description: User updated successfully
@@ -347,7 +347,7 @@ components:
           example: johndoe
           minLength: 3
           maxLength: 50
-        passwordHash:
+        password:
           type: string
           description: User password
           format: password

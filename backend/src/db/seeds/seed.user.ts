@@ -22,7 +22,7 @@ export async function seedUsers() {
 //       firstName: "admin",
 //       lastName: "admin",
 //       username: "admin@gmail.com",
-//       passwordHash: "admin123",
+//       password: "admin123",
 //       permissionsId: "09f16a90-6953-43f4-9e2a-05248f1edde3",
 //       createdAt: new Date(),
 //       updatedAt: new Date(),
@@ -36,7 +36,7 @@ export async function seedUsers() {
 //       firstName: "regular",
 //       lastName: "user",
 //       username: "regular@gmail.com",
-//       passwordHash: "regular123",
+//       password: "regular123",
 //       createdAt: new Date(),
 //       updatedAt: new Date(),
 //     })
